@@ -23,32 +23,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class BookController extends AbstractController
 {
-
-    /**
-     * @var object
-     */
-    private $bookInjection;
-    private $authorInjection;
-
-    public function __construct
-    (
-        BookService $bookService,
-        AuthorService $authorService
-    )
-    {
-        $this->bookInjection    = $bookService      ->getBookEntity();
-        $this->authorInjection  = $authorService    ->getAuthorEntity();
-    }
-
     /**
      * @Route("book/form")
      * @param Request $request
      * @param ManagerRegistry $doctrine
+     * @param BookService $bookService
      * @return Response
      */
-    public function booksForm(Request $request, ManagerRegistry $doctrine): Response
+    public function booksForm(Request $request, ManagerRegistry $doctrine, BookService $bookService): Response
     {
-        $form = $this->createForm(BookForm::class,$this->bookInjection);
+        $form = $this->createForm(BookForm::class, $bookService);
 
         $form->handleRequest($request);
         $bookForm = $form->getData();
@@ -103,7 +87,7 @@ class BookController extends AbstractController
      * @return Response
      * @Route("book/update/{id}")
      */
-    public function updateBook(int $id,ManagerRegistry $doctrine, Request $request = null): Response
+    public function updateBook(int $id,ManagerRegistry $doctrine, Request $request): Response
     {
         $entityManager = $doctrine->getManager();
         $book          = $entityManager->getRepository(Books::class)->find($id);

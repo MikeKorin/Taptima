@@ -3,10 +3,16 @@
 <table style="width:50%">
     <tr>
         <th>Автор</th>
+        <th>Действия</th>
     </tr>
     {% for author in authors %}
         <tr>
             <td>{{ author.name }}</td>
+            <td><a href="{{ path('deleteAuthor', {'id': author.id }) }}">Delete</a><br>
+                <a href="{{ path('updateAuthor', {'id': author.id }) }}">Update</a><br></td>
         </tr>
     {% endfor %}
 </table>
+
+<a href="{{ path('authorFormController') }}">Добавить автора</a>
+<a href="{{ path('bookController') }}">В библиотеку</a>

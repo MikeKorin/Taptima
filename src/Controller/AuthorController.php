@@ -21,30 +21,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AuthorController extends AbstractController
 {
-    /**
-     * @var object
-     */
-    private $bookInjection;
-    private $authorInjection;
-
-    public function __construct
-    (
-        AuthorService $authorService
-    )
-    {
-        $this->authorInjection  = $authorService->getAuthorEntity();
-    }
 
     /**
      * @param Request $request
      * @param ManagerRegistry $doctrine
+     * @param AuthorService $authorService
      * @return Response
      * @Route("/author/form")
      */
-    public function authorForm(Request $request,ManagerRegistry $doctrine): Response
+    public function authorForm(Request $request,ManagerRegistry $doctrine, AuthorService $authorService): Response
     {
-        $form = $this->createForm(AuthorForm::class,$this->authorInjection);
-        
+        $form = $this->createForm(AuthorForm::class, $authorService);
         $form->handleRequest($request);
         $AuthorForm = $form->getData();
 
@@ -54,6 +41,53 @@ class AuthorController extends AbstractController
             $entityManager -> flush();
 
             return $this->redirectToRoute("bookController");
+        }
+
+        return $this->render('author/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @param int $id
+     * @param ManagerRegistry $doctrine
+     * @return Response
+     * @Route("/author/delete/{id}")
+     */
+    public function deleteAuthor(int $id, ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $author          = $entityManager->getRepository(Authors::class)->find($id);
+        $entityManager ->remove($author);
+        $entityManager ->flush();
+
+        return $this->redirectToRoute("authorController");
+    }
+
+    /**
+     * @param int $id
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @Route("/author/update/{id}")
+     * @return Response
+     */
+    public function updateAuthor(int $id,ManagerRegistry $doctrine, Request $request): Response
+    {
+
+        $entityManager = $doctrine->getManager();
+        $author        = $entityManager->getRepository(Authors::class)->find($id);
+
+        $form = $this->createForm(AuthorForm::class, $author);
+
+        $form->handleRequest($request);
+        $authorForm = $form->getData();
+
+        if ($form->isSubmitted()) {
+            $entityManager = $doctrine->getManager();
+            $entityManager -> persist($authorForm);
+            $entityManager -> flush();
+
+            return $this->redirectToRoute("authorController");
         }
 
         return $this->render('author/form.html.twig', [

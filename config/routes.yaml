@@ -10,6 +10,14 @@ authorFormController:
   path: /author/form
   controller: App\Controller\AuthorController::authorForm
 
+deleteAuthor:
+  path: /author/delete/{id}
+  controller: App\Controller\AuthorController::deleteAuthor
+
+updateAuthor:
+  path: /author/update/{id}
+  controller: App\Controller\AuthorController::updateAuthor
+
 bookController:
   path: /books
   controller: App\Controller\BookController::showBookLibrary
