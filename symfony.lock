@@ -83,6 +83,12 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
+    "jms/metadata": {
+        "version": "2.6.1"
+    },
+    "jms/serializer": {
+        "version": "3.17.1"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },

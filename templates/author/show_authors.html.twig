@@ -1,0 +1,12 @@
+{{ include('/header/header.html.twig') }}
+<h2>Authors</h2>
+<table style="width:50%">
+    <tr>
+        <th>Автор</th>
+    </tr>
+    {% for author in authors %}
+        <tr>
+            <td>{{ author.name }}</td>
+        </tr>
+    {% endfor %}
+</table>

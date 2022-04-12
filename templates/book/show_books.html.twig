@@ -1,1 +1,32 @@
-<h1>{{ books }}</h1>
+{{ include('/header/header.html.twig') }}
+<h2>Library</h2>
+<table style="width:100%">
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Описание</th>
+        <th>Год печати</th>
+        <th>Автор</th>
+        <th>Действия</th>
+    </tr>
+    {% for book in books %}
+        <tr>
+            <td>{{ book.id }}</td>
+            <td>{{ book.name }}</td>
+            <td>{{ book.description }}</td>
+            <td>{{ book.year }}</td>
+            <td>{{ book.authorname.name }}</td>
+            <td><a href="{{ path('deleteBook', {'id': book.id }) }}">Delete</a><br>
+                <a href="{{ path('updateBook', {'id': book.id }) }}">Update</a><br></td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+</body>
+</html>
+
+
+<a href="{{ path('bookFormController') }}">Добавить книгу</a>
+<a href="{{ path('authorController') }}">Перейти к авторам</a>
+<a href="{{ path('authorFormController') }}">Добавить автора</a>

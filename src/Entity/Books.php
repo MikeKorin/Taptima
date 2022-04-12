@@ -27,7 +27,6 @@ class Books
      */
     private $description;
 
-
     /**
      * @ORM\Column(type="integer")
      */

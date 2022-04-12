@@ -7,6 +7,9 @@ namespace App\Controller;
 use App\Entity\Authors;
 use App\Entity\Books;
 use App\Form\BookForm;
+use App\Service\AuthorService;
+use App\Service\BookService;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,40 +19,111 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Class BookController
  * @package App\Controller
- * @Route("/books")
+ *
  */
 class BookController extends AbstractController
 {
-    /**
-     * @Route("/form")
-     */
-    public function index(): Response
-    {
-        $book = new Books();
 
-        $form = $this->createForm(BookForm::class, $book);
-        return $this->render('book/new.html.twig', [
+    /**
+     * @var object
+     */
+    private $bookInjection;
+    private $authorInjection;
+
+    public function __construct
+    (
+        BookService $bookService,
+        AuthorService $authorService
+    )
+    {
+        $this->bookInjection    = $bookService      ->getBookEntity();
+        $this->authorInjection  = $authorService    ->getAuthorEntity();
+    }
+
+    /**
+     * @Route("book/form")
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @return Response
+     */
+    public function booksForm(Request $request, ManagerRegistry $doctrine): Response
+    {
+        $form = $this->createForm(BookForm::class,$this->bookInjection);
+
+        $form->handleRequest($request);
+        $bookForm = $form->getData();
+
+        if ($form->isSubmitted()) {
+            $entityManager = $doctrine->getManager();
+            $entityManager -> persist($bookForm);
+            $entityManager -> flush();
+
+            return $this->redirectToRoute("bookController");
+        }
+
+        return $this->render('book/form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/me")
+     * @Route("book/show")
+     * @param ManagerRegistry $doctrine
      * @return Response
      */
-    public function showBookLibrary()
+    public function showBookLibrary(ManagerRegistry $doctrine): Response
     {
-        $signUpPage = $this->generateUrl('sign_up');
+        $book = $doctrine
+            ->getRepository(Books::class)
+            ->findAll();
 
-        $userProfilePage = $this->generateUrl('user_profile', [
-            'username' => "mike",
-        ]);
-
-        $signUpPage = $this->generateUrl('sign_up', [], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        $signUpPageInDutch = $this->generateUrl('sign_up', ['_locale' => 'nl']);
-        return $this->render('book/show_books.html.twig', ['books' => $userProfilePage]);
+        return $this->render('book/show_books.html.twig', ['books' => $book]);
     }
 
+    /**
+     * @Route("book/delete/{id}")
+     * @param int $id
+     * @param ManagerRegistry $doctrine
+     * @return Response
+     */
+    public function deleteBook(int $id, ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $book          = $entityManager->getRepository(Books::class)->find($id);
+        $entityManager ->remove($book);
+        $entityManager ->flush();
+
+        return $this->redirectToRoute("bookController");
+    }
+
+    /**
+     * @param int $id
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @return Response
+     * @Route("book/update/{id}")
+     */
+    public function updateBook(int $id,ManagerRegistry $doctrine, Request $request = null): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $book          = $entityManager->getRepository(Books::class)->find($id);
+
+        $form = $this->createForm(BookForm::class, $book);
+
+        $form->handleRequest($request);
+        $bookForm = $form->getData();
+
+        if ($form->isSubmitted()) {
+            $entityManager = $doctrine->getManager();
+            $entityManager -> persist($bookForm);
+            $entityManager -> flush();
+
+            return $this->redirectToRoute("bookController");
+        }
+
+        return $this->render('book/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
 }

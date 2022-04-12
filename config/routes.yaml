@@ -4,8 +4,24 @@
 
 authorController:
   path: /author
-  controller: App\Controller\AuthorController::index
+  controller: App\Controller\AuthorController::showAuthors
 
-#bookController:
-#  path: /books
-#  controller: App\Controller\BookController::showBookLibrary
+authorFormController:
+  path: /author/form
+  controller: App\Controller\AuthorController::authorForm
+
+bookController:
+  path: /books
+  controller: App\Controller\BookController::showBookLibrary
+
+bookFormController:
+  path: /form
+  controller: App\Controller\BookController::booksForm
+
+deleteBook:
+  path: /book/delete/{id}
+  controller: App\Controller\BookController::deleteBook
+
+updateBook:
+  path: /book/update/{id}
+  controller: App\Controller\BookController::updateBook
