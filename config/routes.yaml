@@ -33,3 +33,7 @@ deleteBook:
 updateBook:
   path: /book/update/{id}
   controller: App\Controller\BookController::updateBook
+
+test:
+  path: /test
+  controller: App\Controller\BookController::test

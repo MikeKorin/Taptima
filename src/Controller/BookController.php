@@ -32,7 +32,7 @@ class BookController extends AbstractController
      */
     public function booksForm(Request $request, ManagerRegistry $doctrine, BookService $bookService): Response
     {
-        $form = $this->createForm(BookForm::class, $bookService);
+        $form = $this->createForm(BookForm::class, $bookService->getBookEntity());
 
         $form->handleRequest($request);
         $bookForm = $form->getData();
@@ -110,4 +110,11 @@ class BookController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("test")
+     */
+    public function test()
+    {
+        return $this->render('book/test.html.twig');
+    }
 }
