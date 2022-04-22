@@ -31,7 +31,7 @@ class AuthorController extends AbstractController
      */
     public function authorForm(Request $request,ManagerRegistry $doctrine, AuthorService $authorService): Response
     {
-        $form = $this->createForm(AuthorForm::class, $authorService);
+        $form = $this->createForm(AuthorForm::class, $authorService->getAuthorEntity());
         $form->handleRequest($request);
         $AuthorForm = $form->getData();
 
