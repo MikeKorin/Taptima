@@ -2,7 +2,6 @@
 <h2>Library</h2>
 <table style="width:100%">
     <tr>
-        <th>ID</th>
         <th>Название</th>
         <th>Описание</th>
         <th>Год печати</th>
@@ -11,7 +10,6 @@
     </tr>
     {% for book in books %}
         <tr>
-            <td>{{ book.id }}</td>
             <td>{{ book.name }}</td>
             <td>{{ book.description }}</td>
             <td>{{ book.year }}</td>
