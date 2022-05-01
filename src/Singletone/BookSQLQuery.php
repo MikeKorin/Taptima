@@ -9,7 +9,7 @@ use App\Repository\BooksRepository;
 
 class BookSQLQuery
 {
-    private static $bookSqlQuery;
+    private static BookSQLQuery $bookSqlQuery;
 
     private function __construct()
     {
@@ -23,6 +23,6 @@ class BookSQLQuery
     
     public function selectBookById(): string
     {
-        return 'something from DB';
+        return 'you are breathtaking!';
     }
 }

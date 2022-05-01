@@ -19,7 +19,19 @@
         </tr>
     {% endfor %}
 </table>
+<br><br>
 
+<button name="generate"  id="mike" onclick="WhatIsIt();">Этот текст передает класс-паттерн Singleton</button>
+<div hidden id="text" ><h2>{{ sql }}</h2></div>
+
+
+<script>
+    function WhatIsIt()
+    {
+        document.getElementById('mike').hidden = true;
+        document.getElementById('text').hidden = false;
+    }
+</script>
 
 </body>
 </html>

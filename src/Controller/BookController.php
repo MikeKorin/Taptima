@@ -65,7 +65,12 @@ class BookController extends AbstractController
             ->getRepository(Books::class)
             ->findAll();
 
-        return $this->render('book/show_books.html.twig', ['books' => $book]);
+        $getInstanceBookQuery = BookSQLQuery::getClassInstance();
+        $sqlResponse = $getInstanceBookQuery->selectBookById();
+
+        $sql = $sqlResponse;
+
+        return $this->render('book/show_books.html.twig', ['books' => $book, 'sql' => $sql]);
     }
 
     /**
@@ -119,8 +124,6 @@ class BookController extends AbstractController
      */
     public function test()
     {
-        $getInstanceBookQuery = BookSQLQuery::getClassInstance();
-        $sqlResponse = $getInstanceBookQuery->selectBookById();
-        return $this->render('book/test.html.twig', ['book' => $sqlResponse]);
+        return $this->render('book/test.html.twig', ['book' => "test"]);
     }
 }
