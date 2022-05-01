@@ -9,6 +9,8 @@ use App\Entity\Books;
 use App\Form\BookForm;
 use App\Service\AuthorService;
 use App\Service\BookService;
+use App\Singletone\BookSQLInjectionTrait;
+use App\Singletone\BookSQLQuery;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,6 +25,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class BookController extends AbstractController
 {
+//    use BookSQLInjectionTrait;
+
     /**
      * @Route("book/form")
      * @param Request $request
@@ -115,6 +119,8 @@ class BookController extends AbstractController
      */
     public function test()
     {
-        return $this->render('book/test.html.twig');
+        $getInstanceBookQuery = BookSQLQuery::getClassInstance();
+        $sqlResponse = $getInstanceBookQuery->selectBookById();
+        return $this->render('book/test.html.twig', ['book' => $sqlResponse]);
     }
 }
